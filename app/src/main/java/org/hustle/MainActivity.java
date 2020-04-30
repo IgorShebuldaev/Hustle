@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
             String response = null;
             try {
                 response = getResponseFromURL(urls[0]);
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             

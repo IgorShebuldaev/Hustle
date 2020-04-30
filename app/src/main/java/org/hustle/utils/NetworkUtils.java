@@ -12,7 +12,7 @@ public class NetworkUtils {
         return new URL("http://10.0.2.2:3000/");
     }
 
-    public static String getResponseFromURL(URL url) throws IOException {
+    public static String getResponseFromURL(URL url) throws Exception {
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
         try {
@@ -27,7 +27,10 @@ public class NetworkUtils {
             } else {
                 return null;
             }
-        } finally {
+        } catch (Exception e) {
+            throw new Exception();
+        }
+        finally {
             urlConnection.disconnect();
         }
     }

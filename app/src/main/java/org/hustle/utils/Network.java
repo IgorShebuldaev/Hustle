@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Network {
     public static URL getURL() throws MalformedURLException {
-        return new URL("http://10.0.2.2:5000/");
+        return new URL("http://10.0.2.2:5000/api/news");
     }
 
     public static JSONArray getResponseFromURL(URL url) throws Exception {

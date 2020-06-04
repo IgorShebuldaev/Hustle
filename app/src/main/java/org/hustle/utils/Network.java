@@ -29,8 +29,6 @@ public class Network {
             } else {
                 return null;
             }
-        } catch (Exception e) {
-            throw new Exception();
         }
         finally {
             urlConnection.disconnect();

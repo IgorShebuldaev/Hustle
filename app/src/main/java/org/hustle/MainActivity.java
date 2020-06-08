@@ -17,10 +17,12 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.hustle.ui.login.LoginFragment;
+import org.hustle.ui.news.AddNewsFragment;
 import org.hustle.ui.news.NewsFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,15 +32,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.navigation_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
 
         setSupportActionBar(toolbar);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "It will scroll up here", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new AddNewsFragment()).commit();
+                stateOfButton(View.INVISIBLE);
             }
         });
 
@@ -62,10 +65,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.navigation_account:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new LoginFragment()).commit();
+                stateOfButton(View.INVISIBLE);
                 break;
             case R.id.navigation_home:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new NewsFragment()).commit();
+                stateOfButton(View.VISIBLE);
                 break;
         }
 
@@ -87,5 +92,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getMenuInflater().inflate(R.menu.main, menu);
 
         return true;
+    }
+
+    private void stateOfButton(Integer turn) {
+        if (turn == View.VISIBLE) {
+            fab.setVisibility(View.VISIBLE);
+        } else {
+            fab.setVisibility(View.INVISIBLE);
+        }
     }
 }

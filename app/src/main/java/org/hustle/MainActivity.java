@@ -1,73 +1,39 @@
 package org.hustle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.hustle.ui.login.LoginFragment;
+import org.hustle.ui.news.NewsFragment;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import static org.hustle.utils.Network.*;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
-    private SwipeRefreshLayout refreshLayout;
-    private MyRecyclerViewAdapter adapter;
-
-
-    class QueryTask extends AsyncTask<URL, Void, JSONArray> {
-
-        @Override
-        protected JSONArray doInBackground(URL... urls) {
-            JSONArray response = null;
-            try {
-                response = getResponseFromURL(urls[0]);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            
-            return response;
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray response) {
-            for (int i = 0; i < response.length(); i++) {
-                try {
-                    adapter.addJsonObject((JSONObject)response.get(i));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        FloatingActionButton fab = findViewById(R.id.fab);
+
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,26 +42,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        drawer = findViewById(R.id.drawer_layout);
-        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        refreshLayout = findViewById(R.id.refreshLayout);
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new NewsFragment()).commit();
+            navigationView.setCheckedItem(R.id.fragment_news);
+        }
+    }
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshLayout.setRefreshing(true);
-                updateData();
-                refreshLayout.setRefreshing(false);
-            }
-        });
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navigation_account:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new LoginFragment()).commit();
+                break;
+            case R.id.navigation_home:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new NewsFragment()).commit();
+                break;
+        }
 
-        updateData();
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override
@@ -110,19 +85,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
+
         return true;
-    }
-
-    private void updateData() {
-        try {
-            RecyclerView recyclerView = findViewById(R.id.rcView);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            adapter = new MyRecyclerViewAdapter(this);
-            recyclerView.setAdapter(adapter);
-
-            new QueryTask().execute(getURL());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
     }
 }

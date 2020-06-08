@@ -13,12 +13,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private JSONArray jsonArray;
     private LayoutInflater mInflater;
 
-    MyRecyclerViewAdapter(Context context) {
+    public RecyclerViewAdapter(Context context) {
         this.mInflater = LayoutInflater.from(context);
         jsonArray = new JSONArray();
     }

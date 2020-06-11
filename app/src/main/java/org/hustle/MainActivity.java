@@ -14,10 +14,9 @@ import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.hustle.ui.login.LoginFragment;
-import org.hustle.ui.news.AddNewsFragment;
+import org.hustle.ui.news.PublishNewsFragment;
 import org.hustle.ui.news.NewsFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View view) {
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new AddNewsFragment()).commit();
+                        new PublishNewsFragment()).commit();
                 stateOfButton(View.INVISIBLE);
             }
         });

@@ -32,11 +32,13 @@ public class QueryTask extends AsyncTask<URL, Void, JSONArray> {
 
     @Override
     protected void onPostExecute(JSONArray response) {
-        for (int i = 0; i < response.length(); i++) {
-            try {
-                adapter.addJsonObject((JSONObject)response.get(i));
-            } catch (JSONException e) {
-                e.printStackTrace();
+        if (response != null) {
+            for (int i = 0; i < response.length(); i++) {
+                try {
+                    adapter.addJsonObject((JSONObject) response.get(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
